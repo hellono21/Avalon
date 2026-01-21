@@ -17,11 +17,11 @@ const GameOverScreen: React.FC<{ winner: 'GOOD' | 'EVIL' }> = ({ winner }) => {
 
     return (
         <div className={`h-[100dvh] w-full flex flex-col items-center justify-center p-8 bg-[#0d0c09] overflow-hidden relative`}>
-             <div className={`absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_${winner === 'GOOD' ? '#22c55e' : '#dc2626'}_0%,_transparent_70%)]`}></div>
-             <span className={`material-symbols-outlined text-8xl mb-6 ${winner === 'GOOD' ? 'text-green-500' : 'text-red-500'}`}>
+             <div className={`absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_${winner === 'GOOD' ? '#2563eb' : '#dc2626'}_0%,_transparent_70%)]`}></div>
+             <span className={`material-symbols-outlined text-8xl mb-6 ${winner === 'GOOD' ? 'text-blue-500' : 'text-red-500'}`}>
                 {winner === 'GOOD' ? 'shield' : 'skull'}
              </span>
-             <h1 className={`text-5xl md:text-7xl font-black uppercase tracking-tighter text-center mb-4 ${winner === 'GOOD' ? 'text-green-500' : 'text-red-500'}`}>
+             <h1 className={`text-5xl md:text-7xl font-black uppercase tracking-tighter text-center mb-4 ${winner === 'GOOD' ? 'text-blue-500' : 'text-red-500'}`}>
                 {winner === 'GOOD' ? '正义胜利' : '邪恶胜利'}
              </h1>
              <p className="text-white/60 text-lg text-center max-w-sm mb-12">
