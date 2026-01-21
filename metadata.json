@@ -1,0 +1,5 @@
+{
+  "name": "Avalon",
+  "description": "A digital companion for the board game The Resistance: Avalon, managing roles, voting, and game phases.",
+  "requestFramePermissions": []
+}
