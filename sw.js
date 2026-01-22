@@ -3,7 +3,8 @@ const PRECACHE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.svg'
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -38,12 +39,12 @@ self.addEventListener('fetch', (event) => {
       if (cachedResponse) {
         // Optional: Update cache in background
         fetch(event.request).then((networkResponse) => {
-             if(networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-                 caches.open(CACHE_NAME).then((cache) => {
-                     cache.put(event.request, networkResponse.clone());
-                 });
-             }
-        }).catch(() => {});
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, networkResponse.clone());
+            });
+          }
+        }).catch(() => { });
         return cachedResponse;
       }
 

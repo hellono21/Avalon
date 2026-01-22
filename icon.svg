@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#181611"/>
-  <path d="M256 32l-192 64 0 160c0 135 85.5 258 192 288 106.5-30 192-153 192-288l0-160-192-64z" fill="#f4c025"/>
-  <path d="M256 100l0 350c-70-25-130-110-130-220l0-110 130-40z" fill="#cda11d"/>
-  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="serif" font-weight="bold" font-size="250" fill="#181611">A</text>
-</svg>
