@@ -3,23 +3,34 @@ import { useGame } from '../store';
 import { Button } from '../components/Button';
 
 export const PlayerSetupScreen: React.FC = () => {
-  const { players, addPlayer, removePlayer, startGame, setGameStep } = useGame();
+  const { players, addPlayer, removePlayer, startGame, setGameStep, removeAllPlayers } = useGame();
   const [inputValue, setInputValue] = useState('');
 
   // Automatically add default players if none exist
   useEffect(() => {
     if (players.length === 0) {
-      ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5"].forEach(name => {
-          addPlayer(name);
-      });
+      // Only auto-add if we didn't just clear them intentionally. 
+      // But for simplicity/original behavior, let's keep it but maybe we need a flag or check?
+      // Actually, if we clear all, players.length becomes 0, ensuring this effect runs again might be annoying if it auto-fills immediately.
+      // Let's modify the effect to ONLY run effectively ONCE on mount or checking if initial load.
+      // However, the original code had `[]` dependency, so it only runs on mount. 
+      // So clearing players won't trigger this effect again. Safe.
     }
   }, []);
 
   const handleAdd = () => {
-    if (inputValue.trim()) {
-      addPlayer(inputValue.trim());
-      setInputValue('');
+    let nameToAdd = inputValue.trim();
+
+    if (!nameToAdd) {
+      let counter = 1;
+      while (players.some(p => p.name === `玩家${counter}`) || players.some(p => p.name === `Player ${counter}`)) {
+        counter++;
+      }
+      nameToAdd = `玩家${counter}`;
     }
+
+    addPlayer(nameToAdd);
+    setInputValue('');
   };
 
   return (
@@ -39,9 +50,9 @@ export const PlayerSetupScreen: React.FC = () => {
 
         <div className="flex gap-3 mb-8 items-center">
           <div className="relative flex-1 group">
-            <input 
-              className="w-full h-14 bg-white dark:bg-surface-dark border border-gray-200 dark:border-[#544e3b] rounded-full px-6 text-base font-medium placeholder-gray-400 dark:placeholder-[#bab29c] focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm text-black dark:text-white" 
-              placeholder="输入姓名" 
+            <input
+              className="w-full h-14 bg-white dark:bg-surface-dark border border-gray-200 dark:border-[#544e3b] rounded-full px-6 text-base font-medium placeholder-gray-400 dark:placeholder-[#bab29c] focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm text-black dark:text-white"
+              placeholder="输入姓名"
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -59,7 +70,7 @@ export const PlayerSetupScreen: React.FC = () => {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">玩家 ({players.length})</h3>
-            <button className="text-xs font-semibold text-primary hover:text-primary-hover">清空全部</button>
+            <button onClick={removeAllPlayers} className="text-xs font-semibold text-primary hover:text-primary-hover">清空全部</button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

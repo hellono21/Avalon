@@ -14,6 +14,7 @@ interface GameContextType extends GameState {
   nextRound: () => void;
   assassinate: (targetId: string) => void;
   resetGame: (step?: GameState['step']) => void;
+  removeAllPlayers: () => void;
 }
 
 const defaultState: GameState = {
@@ -37,7 +38,7 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
     const newPlayer: Player = {
       id: Date.now().toString() + Math.random().toString().slice(2, 8),
       name,
-      role: RoleType.SERVANT, 
+      role: RoleType.SERVANT,
       isLeader: false
     };
     setState(prev => ({ ...prev, players: [...prev.players, newPlayer] }));
@@ -47,14 +48,18 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
     setState(prev => ({ ...prev, players: prev.players.filter(p => p.id !== id) }));
   };
 
+  const removeAllPlayers = () => {
+    setState(prev => ({ ...prev, players: [] }));
+  };
+
   const setGameStep = (step: GameState['step']) => {
     setState(prev => ({ ...prev, step }));
   };
 
   const startGame = () => {
     if (state.players.length < 5) {
-        alert("At least 5 players required.");
-        return;
+      alert("At least 5 players required.");
+      return;
     }
     setState(prev => ({ ...prev, step: 'CONFIG' }));
   };
@@ -72,15 +77,15 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
 
     // Fill remaining spots
     const finalRoles: RoleType[] = [...specialRoles];
-    
+
     // Fill Evil
     while (finalRoles.filter(r => [RoleType.ASSASSIN, RoleType.MORGANA, RoleType.MORDRED, RoleType.OBERON, RoleType.MINION].includes(r)).length < evilCount) {
-        finalRoles.push(RoleType.MINION);
+      finalRoles.push(RoleType.MINION);
     }
-    
+
     // Fill Good
     while (finalRoles.length < playerCount) {
-        finalRoles.push(RoleType.SERVANT);
+      finalRoles.push(RoleType.SERVANT);
     }
 
     // Shuffle
@@ -88,9 +93,9 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
 
     // Assign to players
     const assignedPlayers = state.players.map((p, i) => ({
-        ...p,
-        role: shuffledRoles[i],
-        isLeader: i === 0 // First player is initial leader
+      ...p,
+      role: shuffledRoles[i],
+      isLeader: i === 0 // First player is initial leader
     }));
 
     // Shuffle leader
@@ -98,13 +103,13 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
     assignedPlayers.forEach((p, i) => p.isLeader = i === randomLeaderIndex);
 
     setState(prev => ({
-        ...prev,
-        players: assignedPlayers,
-        step: 'PASS',
-        revealingPlayerIndex: 0,
-        round: 1,
-        missionResults: [null, null, null, null, null],
-        voteTrack: 0
+      ...prev,
+      players: assignedPlayers,
+      step: 'PASS',
+      revealingPlayerIndex: 0,
+      round: 1,
+      missionResults: [null, null, null, null, null],
+      voteTrack: 0
     }));
   };
 
@@ -120,10 +125,10 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
 
   const confirmTeam = (playerIds: string[]) => {
     const team = state.players.filter(p => playerIds.includes(p.id));
-    setState(prev => ({ 
-      ...prev, 
+    setState(prev => ({
+      ...prev,
       currentTeam: team,
-      step: 'VOTE' 
+      step: 'VOTE'
     }));
   };
 
@@ -145,10 +150,10 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
           ...p,
           isLeader: i === nextLeaderIdx
         }));
-        
+
         // If vote track reaches 5, Evil wins (standard rule)
         if (prev.voteTrack + 1 >= 5) {
-             return { ...prev, step: 'GAME_OVER_EVIL' };
+          return { ...prev, step: 'GAME_OVER_EVIL' };
         }
 
         return {
@@ -166,17 +171,17 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
     setState(prev => {
       const newVotes = [...prev.currentMissionVotes, action];
       const nextIndex = prev.missionActionIndex + 1;
-      
+
       if (nextIndex >= prev.currentTeam.length) {
         // All votes in. Calculate result immediately.
         const failCount = newVotes.filter(v => v === 'fail').length;
-        
+
         // Rules: 7+ players, Round 4 requires 2 fails. 
         let isFail = failCount >= 1;
         if (prev.players.length >= 7 && prev.round === 4) {
-            isFail = failCount >= 2;
+          isFail = failCount >= 2;
         }
- 
+
         const isSuccess = !isFail;
         const newResults = [...prev.missionResults];
         newResults[prev.round - 1] = isSuccess ? 'success' : 'fail';
@@ -199,66 +204,66 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
 
   const nextRound = () => {
     setState(prev => {
-       const successTotal = prev.missionResults.filter(r => r === 'success').length;
-       const failTotal = prev.missionResults.filter(r => r === 'fail').length;
+      const successTotal = prev.missionResults.filter(r => r === 'success').length;
+      const failTotal = prev.missionResults.filter(r => r === 'fail').length;
 
-       if (failTotal >= 3) {
-           return { ...prev, step: 'GAME_OVER_EVIL' };
-       }
-       
-       if (successTotal >= 3) {
-           // Good has won 3 missions. Check for Assassin.
-           const hasAssassin = prev.players.some(p => p.role === RoleType.ASSASSIN);
-           if (hasAssassin) {
-               return { ...prev, step: 'ASSASSINATION' };
-           } else {
-               return { ...prev, step: 'GAME_OVER_GOOD' };
-           }
-       }
+      if (failTotal >= 3) {
+        return { ...prev, step: 'GAME_OVER_EVIL' };
+      }
 
-       // Rotate Leader
-       const currentLeaderIdx = prev.players.findIndex(p => p.isLeader);
-       const nextLeaderIdx = (currentLeaderIdx + 1) % prev.players.length;
-       const newPlayers = prev.players.map((p, i) => ({
-          ...p,
-          isLeader: i === nextLeaderIdx
-       }));
+      if (successTotal >= 3) {
+        // Good has won 3 missions. Check for Assassin.
+        const hasAssassin = prev.players.some(p => p.role === RoleType.ASSASSIN);
+        if (hasAssassin) {
+          return { ...prev, step: 'ASSASSINATION' };
+        } else {
+          return { ...prev, step: 'GAME_OVER_GOOD' };
+        }
+      }
 
-       return {
-         ...prev,
-         players: newPlayers,
-         round: prev.round + 1,
-         step: 'ROUND_MAIN',
-         currentTeam: [],
-         currentMissionVotes: [],
-         voteTrack: 0
-       };
+      // Rotate Leader
+      const currentLeaderIdx = prev.players.findIndex(p => p.isLeader);
+      const nextLeaderIdx = (currentLeaderIdx + 1) % prev.players.length;
+      const newPlayers = prev.players.map((p, i) => ({
+        ...p,
+        isLeader: i === nextLeaderIdx
+      }));
+
+      return {
+        ...prev,
+        players: newPlayers,
+        round: prev.round + 1,
+        step: 'ROUND_MAIN',
+        currentTeam: [],
+        currentMissionVotes: [],
+        voteTrack: 0
+      };
     });
   };
 
   const assassinate = (targetId: string) => {
-      const target = state.players.find(p => p.id === targetId);
-      if (target?.role === RoleType.MERLIN) {
-          setState(prev => ({ ...prev, step: 'GAME_OVER_EVIL' }));
-      } else {
-          setState(prev => ({ ...prev, step: 'GAME_OVER_GOOD' }));
-      }
+    const target = state.players.find(p => p.id === targetId);
+    if (target?.role === RoleType.MERLIN) {
+      setState(prev => ({ ...prev, step: 'GAME_OVER_EVIL' }));
+    } else {
+      setState(prev => ({ ...prev, step: 'GAME_OVER_GOOD' }));
+    }
   };
 
   const resetGame = (step?: GameState['step']) => {
-      setState({
-          ...defaultState,
-          step: step || 'WELCOME',
-          players: state.players 
-      });
+    setState({
+      ...defaultState,
+      step: step || 'WELCOME',
+      players: state.players
+    });
   }
 
   return (
-    <GameContext.Provider value={{ 
-      ...state, 
-      addPlayer, 
-      removePlayer, 
-      setGameStep, 
+    <GameContext.Provider value={{
+      ...state,
+      addPlayer,
+      removePlayer,
+      setGameStep,
       startGame,
       assignRoles,
       nextReveal,
@@ -267,7 +272,8 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
       submitMissionAction,
       nextRound,
       assassinate,
-      resetGame
+      resetGame,
+      removeAllPlayers
     }}>
       {children}
     </GameContext.Provider>
