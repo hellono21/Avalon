@@ -9,12 +9,9 @@ export const PlayerSetupScreen: React.FC = () => {
   // Automatically add default players if none exist
   useEffect(() => {
     if (players.length === 0) {
-      // Only auto-add if we didn't just clear them intentionally. 
-      // But for simplicity/original behavior, let's keep it but maybe we need a flag or check?
-      // Actually, if we clear all, players.length becomes 0, ensuring this effect runs again might be annoying if it auto-fills immediately.
-      // Let's modify the effect to ONLY run effectively ONCE on mount or checking if initial load.
-      // However, the original code had `[]` dependency, so it only runs on mount. 
-      // So clearing players won't trigger this effect again. Safe.
+      ["玩家1", "玩家2", "玩家3", "玩家4", "玩家5"].forEach(name => {
+        addPlayer(name);
+      });
     }
   }, []);
 
