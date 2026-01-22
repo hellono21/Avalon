@@ -41,7 +41,7 @@ export const MissionPhaseScreen: React.FC = () => {
   return (
     <div className="relative flex h-[100dvh] w-full flex-col bg-[#0d0c09] text-white overflow-hidden font-display">
       {/* Background Texture */}
-      <div className="absolute inset-0 bg-[url('/images/mission_bg.png')] opacity-5 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[url('./images/mission_bg.png')] opacity-5 pointer-events-none"></div>
 
       <div className="flex-1 flex flex-col items-center justify-center px-6 w-full max-w-md mx-auto z-10">
         <h2 className="text-white/60 font-medium text-lg mb-8">请选择任务行动</h2>

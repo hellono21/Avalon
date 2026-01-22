@@ -13,7 +13,7 @@ export const WelcomeScreen: React.FC = () => {
         <img
           alt="Dark textured surface"
           className="h-full w-full object-cover opacity-40"
-          src="/images/welcome_bg.png"
+          src="./images/welcome_bg.png"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background-dark/30 via-background-dark/60 to-background-dark"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#181611_100%)] opacity-80"></div>

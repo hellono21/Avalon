@@ -32,7 +32,7 @@ export const RoleConfigScreen: React.FC = () => {
     <div className="relative flex h-[100dvh] w-full flex-col dark:bg-[#12100c] overflow-hidden font-display">
       {/* Background Overlay */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[url('/images/role_config_bg.png')] bg-cover opacity-15"></div>
+        <div className="absolute inset-0 bg-[url('./images/role_config_bg.png')] bg-cover opacity-15"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#12100c]/80 to-[#12100c]"></div>
       </div>
 
@@ -83,7 +83,7 @@ export const RoleConfigScreen: React.FC = () => {
           <RoleItem
             name="梅林 (Merlin)"
             desc="初始知晓所有邪恶玩家"
-            img="/images/merlin.png"
+            img="./images/merlin.png"
             checked={specials.includes(RoleType.MERLIN)}
             onChange={() => toggleRole(RoleType.MERLIN)}
             color="blue"
@@ -92,7 +92,7 @@ export const RoleConfigScreen: React.FC = () => {
           <RoleItem
             name="派西维尔 (Percival)"
             desc="知晓梅林和莫甘娜"
-            img="/images/percival.png"
+            img="./images/percival.png"
             checked={specials.includes(RoleType.PERCIVAL)}
             onChange={() => toggleRole(RoleType.PERCIVAL)}
             color="blue"
@@ -110,7 +110,7 @@ export const RoleConfigScreen: React.FC = () => {
           <RoleItem
             name="刺客 (Assassin)"
             desc="游戏结束时刺杀梅林"
-            img="/images/assassin.png"
+            img="./images/assassin.png"
             checked={specials.includes(RoleType.ASSASSIN)}
             onChange={() => toggleRole(RoleType.ASSASSIN)}
             color="red"
@@ -119,7 +119,7 @@ export const RoleConfigScreen: React.FC = () => {
           <RoleItem
             name="莫甘娜 (Morgana)"
             desc="伪装成梅林迷惑派西维尔"
-            img="/images/morgana.png"
+            img="./images/morgana.png"
             checked={specials.includes(RoleType.MORGANA)}
             onChange={() => toggleRole(RoleType.MORGANA)}
             color="red"
@@ -127,7 +127,7 @@ export const RoleConfigScreen: React.FC = () => {
           <RoleItem
             name="莫德雷德 (Mordred)"
             desc="梅林无法看见其邪恶身份"
-            img="/images/mordred.png"
+            img="./images/mordred.png"
             checked={specials.includes(RoleType.MORDRED)}
             onChange={() => toggleRole(RoleType.MORDRED)}
             color="red"
@@ -135,7 +135,7 @@ export const RoleConfigScreen: React.FC = () => {
           <RoleItem
             name="奥伯伦 (Oberon)"
             desc="不认识队友的邪恶角色"
-            img="/images/oberon.png"
+            img="./images/oberon.png"
             checked={specials.includes(RoleType.OBERON)}
             onChange={() => toggleRole(RoleType.OBERON)}
             color="red"
