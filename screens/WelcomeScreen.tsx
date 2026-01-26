@@ -56,7 +56,7 @@ export const WelcomeScreen: React.FC = () => {
 
         <div className="mt-6 flex flex-col items-center gap-2">
           <div className="h-px w-32 bg-gradient-to-r from-transparent via-[#393528] to-transparent"></div>
-          <p className="text-[#5c5643] text-xs font-sans font-normal tracking-wide pt-2">v2.1.0 • 桌游助手</p>
+          <p className="text-[#5c5643] text-xs font-sans font-normal tracking-wide pt-2">v2.2.0 • 桌游助手</p>
         </div>
       </div>
 
@@ -102,11 +102,42 @@ export const WelcomeScreen: React.FC = () => {
               </div>
             </section>
 
-            {/* Section 2: Roles */}
+            {/* Section 1.5: 4-Player Simplified Mode */}
             <section>
               <h3 className="text-primary font-bold text-sm uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                 <span className="w-1 h-4 bg-primary rounded-full"></span>
-                核心角色
+                ⚡ 4人简化版规则
+              </h3>
+              <div className="bg-gradient-to-br from-primary/10 to-transparent p-4 rounded-xl border border-primary/20">
+                <p className="text-white/80 text-sm leading-relaxed mb-3">
+                  当玩家人数为<strong className="text-primary">4人</strong>时,自动启用简化规则,适合快速游戏:
+                </p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-primary text-xs mt-0.5">check_circle</span>
+                    <span className="text-white/70"><strong className="text-white">固定角色:</strong> 3个忠臣 + 1个爪牙(无特殊角色)</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-primary text-xs mt-0.5">check_circle</span>
+                    <span className="text-white/70"><strong className="text-white">任务流程:</strong> 3轮任务,每轮2人执行</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-primary text-xs mt-0.5">check_circle</span>
+                    <span className="text-white/70"><strong className="text-white">胜利条件:</strong> 2个任务成功即好人胜利</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-primary text-xs mt-0.5">check_circle</span>
+                    <span className="text-white/70"><strong className="text-white">无刺杀环节:</strong> 游戏结束直接判定胜负</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Section 2: Roles (标准版) */}
+            <section>
+              <h3 className="text-primary font-bold text-sm uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                <span className="w-1 h-4 bg-primary rounded-full"></span>
+                核心角色 (标准版 5-10人)
               </h3>
               <div className="space-y-3">
                 {[
@@ -132,7 +163,7 @@ export const WelcomeScreen: React.FC = () => {
             <section>
               <h3 className="text-primary font-bold text-sm uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
                 <span className="w-1 h-4 bg-primary rounded-full"></span>
-                游戏流程
+                游戏流程 (标准版 5-10人)
               </h3>
 
               <div className="relative border-l-2 border-white/10 ml-3 space-y-8 pb-4">
@@ -177,7 +208,7 @@ export const WelcomeScreen: React.FC = () => {
             <section>
               <h3 className="text-primary font-bold text-sm uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                 <span className="w-1 h-4 bg-primary rounded-full"></span>
-                刺杀环节
+                刺杀环节 (标准版)
               </h3>
               <div className="bg-gradient-to-br from-red-900/20 to-transparent p-4 rounded-xl border border-red-500/10">
                 <p className="text-white/70 text-sm leading-relaxed">
