@@ -57,8 +57,8 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
   };
 
   const startGame = () => {
-    if (state.players.length < 5) {
-      alert("At least 5 players required.");
+    if (state.players.length < 4 || state.players.length > 10) {
+      alert("需要 4-10 名玩家才能开始游戏");
       return;
     }
     setState(prev => ({ ...prev, step: 'CONFIG' }));
@@ -66,6 +66,43 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
 
   const assignRoles = (specialRoles: RoleType[]) => {
     const playerCount = state.players.length;
+
+    // 4人简化版规则
+    if (playerCount === 4) {
+      const simplifiedRoles = [
+        RoleType.SERVANT,
+        RoleType.SERVANT,
+        RoleType.SERVANT,
+        RoleType.MINION
+      ];
+
+      // 随机打乱角色
+      const shuffledRoles = [...simplifiedRoles].sort(() => Math.random() - 0.5);
+
+      // 分配给玩家
+      const assignedPlayers = state.players.map((p, i) => ({
+        ...p,
+        role: shuffledRoles[i],
+        isLeader: false
+      }));
+
+      // 随机选择队长
+      const randomLeaderIndex = Math.floor(Math.random() * playerCount);
+      assignedPlayers[randomLeaderIndex].isLeader = true;
+
+      setState(prev => ({
+        ...prev,
+        players: assignedPlayers,
+        step: 'PASS',
+        revealingPlayerIndex: 0,
+        round: 1,
+        missionResults: [null, null, null], // 4人局只有3轮任务
+        voteTrack: 0
+      }));
+      return;
+    }
+
+    // 标准版规则 (5-10人)
     let evilCount = 2;
     if (playerCount >= 7) evilCount = 3;
     if (playerCount >= 10) evilCount = 4;
@@ -206,18 +243,30 @@ export const GameProvider = ({ children }: { children?: ReactNode }) => {
     setState(prev => {
       const successTotal = prev.missionResults.filter(r => r === 'success').length;
       const failTotal = prev.missionResults.filter(r => r === 'fail').length;
+      const is4PlayerMode = prev.players.length === 4;
 
-      if (failTotal >= 3) {
-        return { ...prev, step: 'GAME_OVER_EVIL' };
-      }
+      // 4人简化版胜利条件: 2胜或2败
+      if (is4PlayerMode) {
+        if (failTotal >= 2) {
+          return { ...prev, step: 'GAME_OVER_EVIL' };
+        }
+        if (successTotal >= 2) {
+          return { ...prev, step: 'GAME_OVER_GOOD' }; // 直接胜利,无刺杀环节
+        }
+      } else {
+        // 标准版胜利条件: 3胜或3败
+        if (failTotal >= 3) {
+          return { ...prev, step: 'GAME_OVER_EVIL' };
+        }
 
-      if (successTotal >= 3) {
-        // Good has won 3 missions. Check for Assassin.
-        const hasAssassin = prev.players.some(p => p.role === RoleType.ASSASSIN);
-        if (hasAssassin) {
-          return { ...prev, step: 'ASSASSINATION' };
-        } else {
-          return { ...prev, step: 'GAME_OVER_GOOD' };
+        if (successTotal >= 3) {
+          // Good has won 3 missions. Check for Assassin.
+          const hasAssassin = prev.players.some(p => p.role === RoleType.ASSASSIN);
+          if (hasAssassin) {
+            return { ...prev, step: 'ASSASSINATION' };
+          } else {
+            return { ...prev, step: 'GAME_OVER_GOOD' };
+          }
         }
       }
 

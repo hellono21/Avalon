@@ -10,6 +10,7 @@ export const RoundMainScreen: React.FC = () => {
 
   // Standard Avalon Rules
   const getRequiredCount = (r: number, count: number) => {
+    if (count === 4) return 2; // 4人简化版:每轮固定2人
     if (count === 5) return [2, 3, 2, 3, 3][r - 1];
     if (count === 6) return [2, 3, 4, 3, 4][r - 1];
     if (count === 7) return [2, 3, 3, 4, 4][r - 1];
@@ -50,7 +51,7 @@ export const RoundMainScreen: React.FC = () => {
         <div className="flex flex-col items-center w-full mt-2 mb-6">
           <div className="relative flex items-center justify-between w-64 py-2">
             <div className="absolute left-0 right-0 top-1/2 h-[2px] bg-white/10 -z-10 -translate-y-1/2 rounded-full"></div>
-            {[1, 2, 3, 4, 5].map((r) => {
+            {(players.length === 4 ? [1, 2, 3] : [1, 2, 3, 4, 5]).map((r) => {
               const result = missionResults[r - 1];
               let bgColor = r === round ? 'border-primary bg-primary' : 'border-[#333] bg-[#1a1814]';
               if (result === 'success') bgColor = 'border-green-500 bg-green-500';
